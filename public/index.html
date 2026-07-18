@@ -207,7 +207,7 @@
 
 <script>
 'use strict';
-const APP_VERSION = 'v4';
+const APP_VERSION = 'v5';
 const ARTICLES = ['Fuel','Meals (Travel)','Client Entertainment','Accommodation','Parking','Vehicle expenses','Phone & Internet','Insurance','Training & Education','Marketing & Advertising','Equipment & Tools','General Business Expenses','PMU Pigments & Inks','PMU Needles & Cartridges','PMU Equipment & Machines','Skincare & Treatment Products','Disposables & PPE','Salon Supplies'];
 const HIGH_AMOUNT_THRESHOLD = 300;
 
@@ -551,30 +551,34 @@ startTicking();
     setInterval(check, 6 * 60 * 60 * 1000);
   }
   function hideUpdateBanner() {
-    const el = document.getElementById('update-banner');
+    const el = document.getElementById('update-modal');
     if (el) el.remove();
   }
   function showUpdateBanner(info) {
-    if (document.getElementById('update-banner')) return;
-    const bar = document.createElement('div');
-    bar.id = 'update-banner';
-    bar.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:200;display:flex;align-items:center;gap:.6rem;padding:.6rem .9rem;background:var(--color-info-bg,#eef2ff);color:var(--color-info-text,#1e3a5f);border-bottom:1px solid var(--color-border,#e5e7eb);box-shadow:0 2px 8px rgba(0,0,0,.12);font:600 13px/1.3 Inter,system-ui';
-    const label = document.createElement('span');
-    label.id = 'update-banner-label';
-    label.style.cssText = 'flex:1;min-width:0';
+    if (document.getElementById('update-modal')) return;
+    const wrap = document.createElement('div');
+    wrap.id = 'update-modal';
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.5)';
+    const card = document.createElement('div');
+    card.style.cssText = 'width:100%;max-width:320px;background:var(--surface-2,#1a1a1c);color:var(--ink,#ececee);border:1px solid var(--line-2,#333);border-radius:16px;padding:22px 20px;box-shadow:0 24px 60px rgba(0,0,0,.55);text-align:center';
+    const h = document.createElement('div');
+    h.textContent = 'Update available';
+    h.style.cssText = 'font:700 17px Inter,system-ui;color:var(--gold-lt,#e8c98a);margin-bottom:6px';
+    const sub = document.createElement('div');
     const from = info.current || '', to = info.latest || '';
-    label.textContent = 'Update available' + (from && to ? ' (' + from + ' → ' + to + ')' : '');
+    sub.textContent = (from && to) ? (from + ' → ' + to) : 'A newer version is ready to install.';
+    sub.style.cssText = 'font:400 12px/1.5 Inter,system-ui;opacity:.7;margin-bottom:18px;word-break:break-word';
     const btn = document.createElement('button');
     btn.textContent = 'Update now';
-    btn.style.cssText = 'flex-shrink:0;border:0;cursor:pointer;border-radius:8px;padding:.45rem .8rem;font:600 13px Inter,system-ui;background:var(--color-primary,#1e3a5f);color:#fff';
-    const dismiss = document.createElement('button');
-    dismiss.setAttribute('aria-label', 'Dismiss');
-    dismiss.textContent = '✕';
-    dismiss.style.cssText = 'flex-shrink:0;background:transparent;border:0;color:inherit;cursor:pointer;font-size:15px;line-height:1;opacity:.7';
-    dismiss.onclick = () => bar.remove();
-    btn.onclick = () => runUpdate(btn, label, dismiss);
-    bar.appendChild(label); bar.appendChild(btn); bar.appendChild(dismiss);
-    document.body.appendChild(bar);
+    btn.style.cssText = 'width:100%;border:0;cursor:pointer;border-radius:12px;padding:13px 0;font:600 15px Inter,system-ui;background:linear-gradient(180deg,var(--gold-lt,#e8c98a),var(--gold,#c9a24a));color:#0c0c0d;margin-bottom:6px';
+    const later = document.createElement('button');
+    later.textContent = 'Later';
+    later.style.cssText = 'width:100%;border:0;background:transparent;color:inherit;opacity:.6;cursor:pointer;padding:9px 0;font:500 13px Inter,system-ui';
+    later.onclick = () => wrap.remove();
+    btn.onclick = () => runUpdate(btn, sub, later);
+    card.appendChild(h); card.appendChild(sub); card.appendChild(btn); card.appendChild(later);
+    wrap.appendChild(card);
+    document.body.appendChild(wrap);
   }
   async function runUpdate(btn, label, dismiss) {
     btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = 'Updating…';

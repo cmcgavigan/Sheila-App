@@ -4,7 +4,7 @@
 // the IndexedDB queue. Background Sync drains the queue when connectivity returns,
 // POSTing each item to its mode's endpoint (/api/save-out or /api/save-in).
 
-const CACHE_NAME = 'sheila-shell-v4';
+const CACHE_NAME = 'sheila-shell-v5';
 const SHELL_URLS = ['/', '/index.html', '/treatments', '/treatments.html', '/manifest.webmanifest', '/treatments.webmanifest'];
 
 const DB_NAME = 'sheila_queue_db';
