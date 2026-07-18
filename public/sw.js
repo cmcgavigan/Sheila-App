@@ -4,7 +4,7 @@
 // the IndexedDB queue. Background Sync drains the queue when connectivity returns,
 // POSTing each item to its mode's endpoint (/api/save-out or /api/save-in).
 
-const CACHE_NAME = 'sheila-shell-v5';
+const CACHE_NAME = 'sheila-shell-v6';
 const SHELL_URLS = ['/', '/index.html', '/treatments', '/treatments.html', '/manifest.webmanifest', '/treatments.webmanifest'];
 
 const DB_NAME = 'sheila_queue_db';
@@ -116,7 +116,25 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.pathname.startsWith('/api/')) return;  // never cache API calls
   if (req.method !== 'GET') return;
+  const isNav = req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
   event.respondWith((async () => {
+    if (isNav) {
+      // Network-first for the app shell so a new version shows up on next open
+      // (no need to fully close/reopen). Falls back to cache when offline.
+      try {
+        const fresh = await fetch(req);
+        if (fresh && fresh.ok && url.origin === self.location.origin) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(req, fresh.clone()).catch(() => {});
+        }
+        return fresh;
+      } catch (e) {
+        const cached = await caches.match(req, { ignoreSearch: true });
+        if (cached) return cached;
+        return new Response('<h1>Offline</h1><p>Reconnect once, then it works offline next time.</p>', { status: 503, headers: { 'Content-Type': 'text/html' } });
+      }
+    }
+    // Cache-first for other static assets (fast, works offline).
     const cached = await caches.match(req, { ignoreSearch: true });
     if (cached) return cached;
     try {
