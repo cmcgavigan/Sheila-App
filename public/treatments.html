@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Treatments">
+<meta name="theme-color" content="#0c0c0d">
+<link rel="manifest" href="/treatments.webmanifest">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230c0c0d'/><text x='50' y='66' font-size='46' text-anchor='middle' fill='%23c9a24b' font-family='-apple-system,sans-serif' font-weight='700'>T</text></svg>">
+<title>Treatments</title>
+<style>
+  :root{color-scheme:dark;--bg:#0c0c0d;--surface:#141412;--surface-2:#1a1916;--text:#f4efe6;--text-dim:#8c8478;--line:#26231d;--line-2:#3a342a;--gold:#c9a24b;--gold-lt:#e7c873;--danger:#e0594f;--success:#5bbf86;--safe-top:env(safe-area-inset-top,0);--safe-bot:env(safe-area-inset-bottom,0)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;background:var(--bg);color:var(--text)}
+  body{padding-top:var(--safe-top);padding-bottom:var(--safe-bot)}
+  .app{max-width:600px;margin:0 auto;padding:0 16px 24px;min-height:100dvh;display:flex;flex-direction:column}
+  header{text-align:center;padding:16px 0 16px;border-bottom:1px solid var(--line);margin-bottom:16px;position:relative}
+  header .name{font-size:14px;font-weight:600;letter-spacing:0.3em;color:var(--gold-lt);text-transform:uppercase;padding-left:0.3em}
+  header .sub{font-size:10px;font-weight:500;letter-spacing:0.28em;color:var(--text-dim);text-transform:uppercase;margin-top:5px;padding-left:0.28em}
+  header a.back{position:absolute;top:18px;left:0;color:var(--gold);text-decoration:none;font-size:13px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:20px;margin-bottom:14px}
+  h2{font-weight:600}
+  label{display:block;font-size:11px;color:var(--text-dim);margin:14px 0 6px;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+  input{width:100%;padding:16px 14px;border:1px solid var(--line-2);border-radius:12px;background:var(--surface-2);color:var(--text);font-size:17px;-webkit-appearance:none}
+  input:focus{outline:none;border-color:var(--gold)}
+  button.primary{background:linear-gradient(180deg,var(--gold-lt),var(--gold));color:#0c0c0d;border:none;padding:16px;border-radius:15px;font-size:17px;font-weight:600;cursor:pointer;width:100%;min-height:58px;box-shadow:0 10px 24px -12px rgba(201,162,75,0.7)}
+  button.primary:active{transform:scale(.98)} button.primary[disabled]{opacity:.45}
+  button.ghost{background:transparent;color:var(--gold);border:1px solid var(--line-2);padding:14px;border-radius:14px;font-size:15px;cursor:pointer;width:100%;min-height:52px}
+  .row{display:flex;gap:10px;align-items:center;background:var(--surface-2);border:1px solid var(--line-2);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .row .info{flex:1;min-width:0}
+  .row .name{font-size:16px;font-weight:600}
+  .row .price{font-size:13px;color:var(--gold)}
+  .row .acts{display:flex;gap:8px}
+  .iconbtn{width:46px;height:46px;border-radius:12px;border:1px solid var(--line-2);background:var(--bg);color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .iconbtn.del{color:var(--danger);border-color:rgba(224,89,79,.4)}
+  .add-row{display:flex;gap:10px}.add-row .name-in{flex:2}.add-row .price-in{flex:1}
+  .toast{position:fixed;bottom:calc(var(--safe-bot) + 24px);left:50%;transform:translateX(-50%);background:rgba(0,0,0,.94);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;z-index:200;opacity:0;transition:opacity .2s;pointer-events:none;border:1px solid var(--line-2)}
+  .toast.show{opacity:1}.toast.success{border-color:var(--success);color:#cdeedd}.toast.error{border-color:var(--danger);color:#f6cfcb}
+  .hidden{display:none!important}
+  .muted{color:var(--text-dim);font-size:13px;line-height:1.5}
+  .sticky-save{position:sticky;bottom:0;padding:12px 0 4px;background:linear-gradient(180deg,rgba(12,12,13,0),var(--bg) 30%)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <a class="back" href="/">&larr; App</a>
+    <div class="name">Sheila McGavigan</div>
+    <div class="sub">Treatments &amp; Prices</div>
+  </header>
+
+  <!-- PIN gate -->
+  <section class="card" id="pin-card">
+    <h2 style="margin:0 0 6px;font-size:18px">Enter PIN</h2>
+    <p class="muted">This editor changes the treatment list and prices used by the app.</p>
+    <label for="pin">PIN</label>
+    <!-- PIN pre-filled for convenience (Sheila's own tool). To require manual
+         entry instead, remove value="9245" here and the auto-unlock block below. -->
+    <input type="password" id="pin" inputmode="numeric" autocomplete="off" placeholder="••••" value="9245">
+    <div style="margin-top:16px"><button class="primary" id="pin-btn">Unlock</button></div>
+    <p class="muted" id="pin-error" style="color:var(--danger);margin-top:10px"></p>
+  </section>
+
+  <!-- Editor -->
+  <section id="editor" class="hidden">
+    <div class="card">
+      <h2 style="margin:0 0 10px;font-size:18px">Add a treatment</h2>
+      <div class="add-row">
+        <input class="name-in" id="new-name" type="text" placeholder="Treatment name">
+        <input class="price-in" id="new-price" type="number" step="1" inputmode="decimal" placeholder="€">
+      </div>
+      <div style="margin-top:12px"><button class="primary" id="add-btn">+ Add</button></div>
+    </div>
+    <div class="card">
+      <h2 style="margin:0 0 10px;font-size:18px">Current treatments</h2>
+      <div id="list"></div>
+      <p class="muted hidden" id="empty-note">No treatments yet — add one above.</p>
+    </div>
+    <div class="sticky-save"><button class="primary" id="save-btn">💾 Save changes</button></div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+let pin='', treatments=[];
+const $=id=>document.getElementById(id);
+function toast(msg,kind='',ms=2400){const t=$('toast');t.textContent=msg;t.className='toast show'+(kind?' '+kind:'');clearTimeout(toast._t);toast._t=setTimeout(()=>t.className='toast',ms);}
+
+async function verifyPin(p){
+  try{const r=await fetch('/api/treatments/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:p})});const j=await r.json();return j.ok;}
+  catch(e){return false;}
+}
+async function loadTreatments(){
+  try{const r=await fetch('/api/treatments',{cache:'no-store'});const j=await r.json();treatments=j.treatments||[];}
+  catch(e){treatments=[];toast('Could not load treatments','error');}
+  render();
+}
+function render(){
+  const list=$('list');list.innerHTML='';
+  $('empty-note').classList.toggle('hidden',treatments.length>0);
+  treatments.forEach((t,i)=>{
+    const row=document.createElement('div');row.className='row';
+    row.innerHTML=`<div class="info"><div class="name"></div><div class="price"></div></div>
+      <div class="acts"><button class="iconbtn" data-edit="${i}">✎</button><button class="iconbtn del" data-del="${i}">🗑</button></div>`;
+    row.querySelector('.name').textContent=t.name;
+    row.querySelector('.price').textContent=t.price?('€'+t.price):'no price';
+    list.appendChild(row);
+  });
+  list.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>{treatments.splice(+b.dataset.del,1);render();}));
+  list.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.edit,t=treatments[i];
+    const name=prompt('Treatment name:',t.name);if(name===null)return;
+    const price=prompt('Price (€):',t.price);if(price===null)return;
+    treatments[i]={name:name.trim()||t.name,price:Number(price)||0};render();
+  }));
+}
+$('add-btn').addEventListener('click',()=>{
+  const name=$('new-name').value.trim();const price=Number($('new-price').value)||0;
+  if(!name){toast('Enter a name','error');return;}
+  treatments.push({name,price});$('new-name').value='';$('new-price').value='';render();toast('Added — remember to Save','success');
+});
+$('save-btn').addEventListener('click',async()=>{
+  $('save-btn').disabled=true;$('save-btn').textContent='Saving…';
+  try{
+    const r=await fetch('/api/treatments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin,treatments})});
+    const j=await r.json();
+    if(!r.ok)throw new Error(j.error||'Save failed');
+    treatments=j.treatments||treatments;render();toast('Saved ✓','success');
+  }catch(e){toast(e.message,'error');}
+  finally{$('save-btn').disabled=false;$('save-btn').textContent='💾 Save changes';}
+});
+$('pin-btn').addEventListener('click',async()=>{
+  const p=$('pin').value.trim();$('pin-error').textContent='';
+  if(!p){$('pin-error').textContent='Enter the PIN.';return;}
+  $('pin-btn').disabled=true;$('pin-btn').textContent='Checking…';
+  const ok=await verifyPin(p);
+  $('pin-btn').disabled=false;$('pin-btn').textContent='Unlock';
+  if(ok){pin=p;$('pin-card').classList.add('hidden');$('editor').classList.remove('hidden');loadTreatments();}
+  else $('pin-error').textContent='Wrong PIN.';
+});
+$('pin').addEventListener('keydown',e=>{if(e.key==='Enter')$('pin-btn').click();});
+
+// Auto-unlock: the PIN is pre-filled above, so try unlocking on load for a
+// zero-typing experience. Remove this block (and the value="9245") to require
+// manual PIN entry.
+window.addEventListener('load',()=>{ if($('pin').value.trim()) $('pin-btn').click(); });
+
+// Register the service worker so this page works offline once cached (it's a
+// proper installable PWA, separate icon from the main receipts app).
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

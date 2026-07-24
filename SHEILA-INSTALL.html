@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sheila's Receipts</title>
+<style>
+  :root{--bg:#0c0c0d;--card:#141412;--ink:#f4efe6;--dim:#8c8478;--line:#26231d;--line2:#3a342a;--gold:#c9a24b;--gold-lt:#e7c873}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;min-height:100%;font-family:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--ink)}
+  .wrap{max-width:30rem;margin:0 auto;padding:1.5rem 1.25rem 2.5rem;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+  .head{text-align:center;padding-bottom:1.2rem;border-bottom:1px solid var(--line);margin-bottom:1.6rem}
+  .head .name{font-size:15px;font-weight:600;letter-spacing:0.32em;color:var(--gold-lt);text-transform:uppercase;padding-left:0.32em}
+  .head .sub{font-size:10px;font-weight:500;letter-spacing:0.3em;color:var(--dim);text-transform:uppercase;margin-top:5px}
+  .progress{display:flex;gap:6px;justify-content:center;margin-bottom:1.8rem}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--line2)}
+  .dot.active{background:var(--gold)} .dot.done{background:var(--gold-lt)}
+  .step{display:none;animation:fade .25s ease} .step.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .kicker{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+  h2{font-size:24px;font-weight:600;margin:0 0 1rem;letter-spacing:-0.01em}
+  p{font-size:16px;line-height:1.6;color:var(--ink);margin:.7rem 0}
+  .tapbtn{display:block;text-align:center;text-decoration:none;color:#0c0c0d;background:linear-gradient(180deg,var(--gold-lt),var(--gold));font-size:16px;font-weight:600;padding:16px;border-radius:15px;margin:1.3rem 0 .4rem;box-shadow:0 10px 24px -12px rgba(201,162,75,0.7)}
+  .tapbtn:active{transform:scale(.985)}
+  .pause{background:rgba(201,162,75,0.09);border:1px solid rgba(201,162,75,0.32);border-radius:14px;padding:1rem 1.1rem;margin:1.2rem 0;font-size:15px;color:var(--gold-lt)}
+  .pause b{color:var(--gold-lt)}
+  .install{border-top:1px solid var(--line);margin-top:1.3rem;padding-top:1.1rem}
+  .install ol{margin:0;padding-left:1.3rem}
+  .install li{font-size:16px;line-height:1.6;margin:.6rem 0}
+  .install li b{color:var(--gold-lt)}
+  .share-ico{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:#1a1916;border:1px solid var(--line2);color:var(--gold-lt);font-size:13px;vertical-align:-5px;margin:0 2px}
+  .nav{margin-top:auto;padding-top:1.8rem;display:flex;gap:10px}
+  button{flex:1;font-family:inherit;font-size:16px;font-weight:600;padding:16px;border-radius:15px;cursor:pointer;border:none}
+  .next{color:#0c0c0d;background:linear-gradient(180deg,var(--gold-lt),var(--gold));box-shadow:0 10px 24px -12px rgba(201,162,75,0.7)}
+  .next:active{transform:scale(.985)}
+  .back{flex:0 0 84px;background:transparent;color:var(--gold);border:1px solid var(--line2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="name">Sheila McGavigan</div>
+    <div class="sub">Permanent Makeup</div>
+  </div>
+  <div class="progress" id="progress"></div>
+
+  <div class="step on" data-step="0">
+    <div class="kicker">For you, sweetie</div>
+    <h2>Your receipts app</h2>
+    <p>Snaps your receipts and keeps your books, so no more shoebox of paper.</p>
+    <p>Two minutes, three steps. Tap <b>Start</b>. x</p>
+  </div>
+
+  <div class="step" data-step="1">
+    <div class="kicker">Step 1 of 3</div>
+    <h2>Get Tailscale</h2>
+    <p>A wee free app &mdash; the secure link to my laptop.</p>
+    <a class="tapbtn" href="https://apps.apple.com/app/tailscale/id1470499037">Install Tailscale</a>
+  </div>
+
+  <div class="step" data-step="2">
+    <div class="kicker">Step 2 of 3</div>
+    <h2>Sign in</h2>
+    <p>Open Tailscale, tap <b>Sign in with Apple</b>.</p>
+    <div class="pause"><b>Then check your email:</b> tap <b>Accept</b> on my invite, and switch Tailscale <b>On</b> (goes green).</div>
+  </div>
+
+  <div class="step" data-step="3">
+    <div class="kicker">Step 3 of 3</div>
+    <h2>Add the app</h2>
+    <a class="tapbtn" href="https://desktop-rh302uu.tail999c81.ts.net:8443">Open my Receipts app</a>
+    <div class="install">
+      <ol>
+        <li>Tap <b>Share</b> <span class="share-ico">&#x2191;</span> at the bottom.</li>
+        <li><b>Scroll down</b> to <b>Add to Home Screen</b>.</li>
+        <li>Tap it, then <b>Add</b>.</li>
+      </ol>
+    </div>
+    <div class="pause">Tap <b>Allow</b> if it asks for camera or location. See a <b>&ldquo;Not Secure&rdquo;</b> warning? Don't tap &mdash; just ring me.</div>
+  </div>
+
+  <div class="step" data-step="4">
+    <div class="kicker">Done</div>
+    <h2>That's you sorted &#10003;</h2>
+    <p>Open it from your Home Screen any time. Your prices are inside, under <b>Treatments &amp; prices</b>.</p>
+    <p>Love you. x</p>
+  </div>
+
+  <div class="nav" id="nav"></div>
+</div>
+
+<script>
+  const steps=Array.from(document.querySelectorAll('.step')),total=steps.length;
+  const prog=document.getElementById('progress'),nav=document.getElementById('nav');let i=0;
+  for(let s=0;s<total;s++){const dt=document.createElement('div');dt.className='dot';prog.appendChild(dt);}
+  function render(){
+    steps.forEach((s,idx)=>s.classList.toggle('on',idx===i));
+    Array.from(prog.children).forEach((dd,idx)=>{dd.className='dot'+(idx===i?' active':(idx<i?' done':''));});
+    nav.innerHTML='';
+    if(i>0){const b=document.createElement('button');b.className='back';b.textContent='Back';b.onclick=()=>{i--;render();window.scrollTo(0,0);};nav.appendChild(b);}
+    const n=document.createElement('button');n.className='next';
+    n.textContent=i===0?'Start':(i===total-1?'Finish':'Next');
+    n.onclick=()=>{if(i<total-1){i++;render();window.scrollTo(0,0);}else{document.querySelector('.wrap').innerHTML='<div style=\'text-align:center;margin:auto;padding:3rem 1rem\'><div style=\'font-size:15px;letter-spacing:0.3em;text-transform:uppercase;color:#e7c873\'>All set</div><p style=\'color:#8c8478;margin-top:1rem\'>Open your app from the Home Screen. x</p></div>';}};
+    nav.appendChild(n);
+  }
+  render();
+</script>
+</body>
+</html>

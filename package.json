@@ -1,0 +1,25 @@
+{
+  "name": "sheila-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Receipt PWA for Sheila McGavigan PMU - income, expenses, treatments.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "tray": "node tray.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.0.0",
+    "express": "^4.21.1",
+    "qrcode": "^1.5.4",
+    "selfsigned": "^2.4.1",
+    "sharp": "^0.33.5",
+    "systray2": "^2.1.4",
+    "xlsx": "^0.18.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sheila's Receipts - Setup</title>
+<style>
+  :root{--bg:#0c0c0d;--card:#141412;--ink:#f4efe6;--dim:#8c8478;--line:#26231d;--line2:#3a342a;--gold:#c9a24b;--gold-lt:#e7c873}
+  *{box-sizing:border-box}
+  body{font:15.5px/1.65 -apple-system,'Segoe UI',Roboto,'Helvetica Neue',sans-serif;margin:0;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:52rem;margin:0 auto;padding:2rem 1.25rem 3rem}
+  .head{text-align:center;border-bottom:1px solid var(--line);padding-bottom:1.4rem;margin-bottom:1.6rem}
+  .head .name{font-size:18px;font-weight:600;letter-spacing:0.34em;color:var(--gold-lt);text-transform:uppercase;padding-left:0.34em}
+  .head .sub{font-size:11px;font-weight:500;letter-spacing:0.3em;color:var(--dim);text-transform:uppercase;margin-top:7px;padding-left:0.3em}
+  .lead{color:var(--ink);text-align:center;margin:0 0 1.8rem;font-size:15px}
+  .step{background:var(--card);border:1px solid var(--line2);border-radius:18px;padding:1.3rem 1.4rem;margin:0 0 1.1rem;display:flex;gap:1.3rem;align-items:flex-start}
+  .step .n{flex:0 0 40px;height:40px;border-radius:50%;background:linear-gradient(180deg,var(--gold-lt),var(--gold));color:#0c0c0d;font-weight:700;font-size:1.15rem;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .step .body{flex:1;min-width:0}
+  .step h2{font-size:1.15rem;margin:.1rem 0 .5rem;font-weight:600;color:var(--ink)}
+  .step p{margin:.5rem 0;color:var(--ink)}
+  .step .qr{flex:0 0 150px;text-align:center}
+  .step .qr img{width:150px;height:150px;border-radius:12px;background:#f4efe6;padding:7px}
+  .step .qr .cap{font-size:.78rem;color:var(--dim);margin-top:.4rem;letter-spacing:0.04em;text-transform:uppercase}
+  .url{font:13px ui-monospace,Consolas,monospace;background:#1a1916;border:1px solid var(--line2);border-radius:8px;padding:.5rem .7rem;word-break:break-all;display:inline-block;margin:.3rem 0;color:var(--gold-lt)}
+  .warn{background:rgba(201,162,75,0.08);border:1px solid rgba(201,162,75,0.3);color:var(--gold-lt);border-radius:14px;padding:1rem 1.2rem;margin:0 0 1.1rem;font-size:14px}
+  .done{text-align:center;color:var(--ink);margin-top:1.8rem;font-size:.97rem;border-top:1px solid var(--line);padding-top:1.4rem}
+  @media(max-width:620px){.step{flex-direction:column}.step .qr{flex:none;align-self:center}}
+  @media print{body{background:#fff;color:#1a1a1a}.step,.head{break-inside:avoid}.head .name,.head .sub,.step .qr .cap{color:#7a5a14}.url{background:#f3f0e8;color:#7a5a14}.warn{background:#faf3e2;color:#7a5a14}.step{border-color:#ddd;background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="name">Sheila McGavigan</div>
+    <div class="sub">Permanent Makeup</div>
+  </div>
+  <p class="lead">Hiya sweetie &mdash; I built you a little app to handle all your receipts so you never have to wrestle with a shoebox of paper again. Three quick steps and you're sorted. Honestly, it's piss easy. Love you. x</p>
+
+  <div class="step">
+    <div class="n">1</div>
+    <div class="body">
+      <h2>Get Tailscale</h2>
+      <p>This is just the wee thing that lets your phone talk to my laptop. Scan the code and tap <b>Get</b> to install it.</p>
+      <p>Open it, tap <b>Sign in with Apple</b> &mdash; one Face ID and you're in, no fiddly passwords.</p>
+      <p class="warn">I'll send you an email invite &mdash; open it on your phone and tap <b>Accept</b>, then flip the Tailscale switch <b>On</b> so it goes green. That's the boring bit done, you only ever do it once.</p>
+    </div>
+    <div class="qr"><img src="data:image/png;base64,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" alt="Tailscale"><div class="cap">Get Tailscale</div></div>
+  </div>
+
+  <div class="step">
+    <div class="n">2</div>
+    <div class="body">
+      <h2>Open your app</h2>
+      <p>With Tailscale on, scan this to open it. Then hit the <b>Share</b> button (the wee square with the arrow popping out the top) &rarr; <b>Add to Home Screen</b>, so it lives on your phone like a proper app.</p>
+      <p>When it asks, tap <b>Allow</b> for the camera and location &mdash; it needs them to do its job.</p>
+      <span class="url">https://desktop-rh302uu.tail999c81.ts.net:8443</span>
+    </div>
+    <div class="qr"><img src="data:image/png;base64,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" alt="App"><div class="cap">Open the app</div></div>
+  </div>
+
+  <div class="warn">
+    <b>If you get a &ldquo;Not Secure&rdquo; warning when it opens:</b> don't panic and don't tap a thing &mdash; just <b>ring me, I'm good at this shite</b>. Two minutes on the phone together and it's sorted.
+  </div>
+
+  <div class="step">
+    <div class="n">3</div>
+    <div class="body">
+      <h2>Your treatments &amp; prices</h2>
+      <p>This is where your treatment list and prices live. Scan to open it &mdash; it unlocks itself, no faffing with PINs.</p>
+      <p>Stick it on your Home Screen too if you'll be changing prices a lot.</p>
+    </div>
+    <div class="qr"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAU0AAAFNCAIAAAALkqqTAAAGvUlEQVR4nO3dMW5cNxRA0SjwItK49v6XkzqAkE6NFuAVmLAJinr/6pzWmBnO11yw8AP58v72+heQ9vdnLwD4cDqHPp1Dn86hT+fQp3Po0zn06Rz6dA59Ooc+nUOfzqFP59Cnc+jTOfTpHPp0Dn3f9l72z/cfZ9dx0////furf7r5vfaWMeRVNx1fYfXXu2A/hz6dQ5/OoU/n0Kdz6NM59Okc+nQOfZtzMgvzhysWjs9dHJ/JGTIMc/zxDvlej/71LtjPoU/n0Kdz6NM59Okc+nQOfTqHPp1D3/k5mYXj//s/ZKrh+DDM3hseH7zZc3M06KZH/3rt59Cnc+jTOfTpHPp0Dn06hz6dQ5/Ooe/qnMx8Q041WRhy4s3x01qGDMNU2c+hT+fQp3Po0zn06Rz6dA59Ooc+nUOfORnuMQzzWezn0Kdz6NM59Okc+nQOfTqHPp1Dn86h7+qczJBrkvYcP1zl5tDIo49/mb+M+ezn0Kdz6NM59Okc+nQOfTqHPp1Dn86h7/ycTPXMkPn3E1VfddOQZRxnP4c+nUOfzqFP59Cnc+jTOfTpHPp0Dn2bczKPPlvjCxoyoDJkhOYL/nrt59Cnc+jTOfTpHPp0Dn06hz6dQ5/Ooe/l/e1142XHT1A5/llDbuTZW8ajv9fNp7Ew5GSY44vfe0P7OfTpHPp0Dn06hz6dQ5/OoU/n0Kdz6Nuck1m4efrHkHGd44YMV+wZMkIz/7dx849iP4c+nUOfzqFP59Cnc+jTOfTpHPp0Dn3n52QWHn24ysL8FR43ZNTkuEdPKC3Yz6FP59Cnc+jTOfTpHPp0Dn06hz6dQ9+34+845JqkLzjIMeTJLwyZJ5n/YzvOfg59Ooc+nUOfzqFP59Cnc+jTOfTpHPo252SODzwcf9WQq3DmD6gszL/VaP50zZBnaD+HPp1Dn86hT+fQp3Po0zn06Rz6dA595+9dGnKqyZD5hJtPY8jij3v0b2PIM7SfQ5/OoU/n0Kdz6NM59Okc+nQOfTqHvvP3Ls0/QWX+gMreZw2ZULr5V977XvNX6DwZ4I/pHPp0Dn06hz6dQ5/OoU/n0Kdz6Ds/J3PczcmQ43MX86eGjhvylffcPDTGeTLASTqHPp1Dn86hT+fQp3Po0zn06Rz6zt+7tGfIIMcQQ26G2jPkxJsh41ULzpMBTtI59Okc+nQOfTqHPp1Dn86hT+fQ9+zzZOa7OeNx05AV3hxrefR1XfZz6NM59Okc+nQOfTqHPp1Dn86hT+fQtzknc/MojL1lLAw5aWTI4hduHjWz5/gKb07X3GQ/hz6dQ5/OoU/n0Kdz6NM59Okc+nQOfZtzMkP+93/h5kjG/NmVITM5e68aMuSzcHOFe59lP4c+nUOfzqFP59Cnc+jTOfTpHPp0Dn0v72+vGy979BDC/CGfPfMPw9kzf+RpYchtTfZz6NM59Okc+nQOfTqHPp1Dn86hT+fQd3VO5tEDKvOHK4aMZCw8erpmYchZQwv2c+jTOfTpHPp0Dn06hz6dQ5/OoU/n0Dfl3qWbExQLQyZ5bk5QzJ/JmT+FsjDkh20/hz6dQ5/OoU/n0Kdz6NM59Okc+nQOfZvnydx0fOCheqrJniGPd8iDurl458kAJ+kc+nQOfTqHPp1Dn86hT+fQp3Po2zxPZsioyZDDOhZuzkLM/6zFq+b/KReGnF2zYD+HPp1Dn86hT+fQp3Po0zn06Rz6dA59DzhP5qb5dwYdN3+EZs+jv5fzZIA/pnPo0zn06Rz6dA59Ooc+nUOfzqHvAefJHDdkgmLh5tzF8Tc8PjW0sLf4m8sYMg1lP4c+nUOfzqFP59Cnc+jTOfTpHPp0Dn2bczILQy6aGXKOh2X8pptXF81/w+Ps59Cnc+jTOfTpHPp0Dn06hz6dQ5/Ooe/8nMzCo+/W2VvGzWNSbn7WzTfcc3MZN4d89tjPoU/n0Kdz6NM59Okc+nQOfTqHPp1D39U5mfmO35IzZGhkYcjhKosHNeSqqT1DRmjs59Cnc+jTOfTpHPp0Dn06hz6dQ5/Ooc+czMfam9Y4PmpyfGjk5ozHkCNZ9gxZvP0c+nQOfTqHPp1Dn86hT+fQp3Po0zn0XZ2TGTIzcNPx2ZW9O55uHsly8yCX+UM+Q9jPoU/n0Kdz6NM59Okc+nQOfTqHPp1D3/k5mfk3DS3cvCXn+EVON0doFub/AIac5HPzDe3n0Kdz6NM59Okc+nQOfTqHPp1Dn86h7+X97fWz1wB8LPs59Okc+nQOfTqHPp1Dn86hT+fQp3Po0zn06Rz6dA59Ooc+nUOfzqFP59Cnc+jTOfT9BG2azMlHxuwGAAAAAElFTkSuQmCC" alt="Treatments"><div class="cap">Treatments &amp; prices</div></div>
+  </div>
+
+  <p class="done">And that's the lot. Snap a photo of any receipt &mdash; even with no signal it sits safe on your phone and files itself the second you're back online. Just always open it from the icon on your Home Screen.<br><br>Any bother at all, ring me. x</p>
+</div>
+</body>
+</html>
