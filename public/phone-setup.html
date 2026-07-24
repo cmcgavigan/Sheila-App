@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sheila — Phone Setup Sheet</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  :root{--ink:#1a1320;--muted:#6b7280;--line:#e5d3df;--pink:#b6356b;--green:#1f9d5e;--bg:#fff}
+  *{box-sizing:border-box}
+  body{font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;margin:0;color:var(--ink);background:#fdf2f8}
+  .wrap{max-width:60rem;margin:0 auto;padding:1.5rem 1.25rem 3rem}
+  h1{font-size:1.6rem;margin:.2rem 0}
+  .lead{color:var(--muted);margin:.2rem 0 1rem}
+  .addr-bar{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1rem 1.1rem;margin:0 0 1.4rem;box-shadow:0 8px 24px -18px rgba(0,0,0,.5)}
+  .addr-bar label{display:block;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--pink);margin-bottom:.4rem}
+  .addr-bar input{width:100%;padding:.7rem .8rem;font:15px ui-monospace,Consolas,monospace;border:1px solid var(--line);border-radius:10px}
+  .addr-bar .hint{font-size:.82rem;color:var(--muted);margin:.5rem 0 0}
+  .grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{position:relative;background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.2rem 1.2rem 1.4rem;text-align:center}
+  .card .num{position:absolute;top:-12px;left:16px;width:30px;height:30px;border-radius:50%;background:var(--pink);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .card h2{font-size:1.05rem;margin:.5rem 0 .5rem;text-align:left}
+  .card p{margin:.4rem 0;text-align:left}.card .sub{color:var(--muted);font-size:.84rem;text-align:left}
+  .qr{display:flex;align-items:center;justify-content:center;min-height:184px;margin:.4rem auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px}
+  .qr canvas,.qr img{display:block}
+  .qr.empty{color:var(--muted);font-size:.85rem;border-style:dashed}
+  .tabs{display:flex;gap:.5rem;margin:0 0 1rem}
+  .tabs button{flex:1;border:1px solid var(--line);background:#fff;color:var(--ink);padding:.7rem;border-radius:10px;font-weight:700;cursor:pointer}
+  .tabs button.active{background:var(--pink);color:#fff;border-color:var(--pink)}
+  .panel{display:none}.panel.active{display:block}
+  .steps{background:#fff;border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem;margin-top:1.2rem}
+  .steps ol{margin:.4rem 0 0;padding-left:1.2rem}.steps li{margin:.35rem 0}
+  .print-btn{position:fixed;right:18px;bottom:18px;background:var(--pink);color:#fff;border:none;border-radius:999px;padding:.8rem 1.3rem;font-weight:700;cursor:pointer;box-shadow:0 10px 24px -10px rgba(182,53,107,.7)}
+  .warn{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:10px;padding:.7rem .9rem;font-size:.85rem;margin:.6rem 0 0}
+  @media print{
+    body{background:#fff}.print-btn,.tabs,.addr-bar .hint{display:none}
+    .addr-bar{box-shadow:none}.tabs{display:none}.panel{display:block!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>💅 Sheila — Phone Setup</h1>
+  <p class="lead">Scan these with the iPhone’s camera. The whole thing takes a minute or two.</p>
+
+  <div class="addr-bar">
+    <label for="addr">App address (from the laptop console)</label>
+    <input id="addr" type="text" placeholder="https://… (e.g. https://laptop-name.tailXXXX.ts.net  or  https://192.168.1.20:3001)">
+    <p class="hint">When the server starts it prints lines like <b>Anywhere:</b> (Tailscale) and <b>fallback:</b> (Wi-Fi). Paste whichever you’re using here and the QR codes update automatically. If you opened this page from the running server, it’s filled in for you.</p>
+  </div>
+
+  <div class="tabs">
+    <button id="tab-ts" class="active">Tailscale (anywhere)</button>
+    <button id="tab-wifi">Same Wi-Fi (quick)</button>
+  </div>
+
+  <!-- TAILSCALE PANEL -->
+  <div class="panel active" id="panel-ts">
+    <div class="grid">
+      <div class="card">
+        <div class="num">1</div>
+        <h2>Install Tailscale</h2>
+        <p>Scan to get the Tailscale app, then sign in. The phone must be on the <b>same tailnet</b> as the laptop (sign in with your account, or accept the device-share invite).</p>
+        <div class="qr" id="qr-ts-app"></div>
+        <p class="sub">App Store: search “Tailscale”.</p>
+      </div>
+      <div class="card">
+        <div class="num">2</div>
+        <h2>Open Sheila’s app</h2>
+        <p>With Tailscale on, scan to open the app — secure, no warnings.</p>
+        <div class="qr empty" id="qr-app">Enter the address above</div>
+        <p class="sub">Then Safari → Share → <b>Add to Home Screen</b>.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h2>Treatments editor</h2>
+        <p>Optional — edit treatment names &amp; prices (needs the PIN).</p>
+        <div class="qr empty" id="qr-treat">Enter the address above</div>
+        <p class="sub">Add to Home Screen too if you’ll use it often.</p>
+      </div>
+    </div>
+    <div class="steps">
+      <b>Tailscale path — order of operations</b>
+      <ol>
+        <li>On the laptop: Tailscale installed, signed in, running.</li>
+        <li>On the phone: install Tailscale (QR 1), sign in / accept the share, toggle it <b>On</b>.</li>
+        <li>Paste the laptop’s <b>Anywhere: https://…ts.net</b> address into the box above.</li>
+        <li>Scan QR 2 to open the app → Add to Home Screen.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- WIFI PANEL -->
+  <div class="panel" id="panel-wifi">
+    <div class="grid">
+      <div class="card" style="grid-column:1 / -1;max-width:24rem;margin:0 auto">
+        <div class="num">1</div>
+        <h2>Open Sheila’s app</h2>
+        <p>Phone and laptop on the <b>same Wi-Fi</b>. Scan to open the app.</p>
+        <div class="qr empty" id="qr-app-wifi">Enter the address above</div>
+        <p class="sub">Paste the laptop’s <b>fallback: https://&lt;ip&gt;:3001</b> line above.</p>
+        <div class="warn">You’ll see a “Not Secure” warning (self-signed cert). Tap <b>Show Details → visit this website</b> once. It’s safe — it’s your own laptop.</div>
+      </div>
+    </div>
+    <div class="steps">
+      <b>Wi-Fi path — order of operations</b>
+      <ol>
+        <li>Phone + laptop on the same Wi-Fi network.</li>
+        <li>Paste the laptop’s <b>fallback: https://&lt;ip&gt;:3001</b> address above.</li>
+        <li>Scan the QR → tap through the cert warning once.</li>
+        <li>Safari → Share → <b>Add to Home Screen</b>, open from the icon.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<button class="print-btn" onclick="window.print()">🖨 Print this sheet</button>
+
+<script>
+const TS_APP = 'https://apps.apple.com/app/tailscale/id1470499037';
+function mkQR(elId, text){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  el.innerHTML = '';
+  el.classList.remove('empty');
+  new QRCode(el, { text, width: 168, height: 168, correctLevel: QRCode.CorrectLevel.M });
+}
+function clearQR(elId, msg){
+  const el = document.getElementById(elId);
+  if(!el) return;
+  el.innerHTML = msg || 'Enter the address above';
+  el.classList.add('empty');
+}
+// Tailscale App Store QR is fixed — render immediately.
+mkQR('qr-ts-app', TS_APP);
+
+function normalize(a){
+  a = (a||'').trim().replace(/\/+$/,'');
+  if(!a) return '';
+  if(!/^https?:\/\//i.test(a)) a = 'https://' + a;
+  return a;
+}
+function update(){
+  const base = normalize(document.getElementById('addr').value);
+  if(!base){
+    clearQR('qr-app'); clearQR('qr-treat'); clearQR('qr-app-wifi');
+    return;
+  }
+  mkQR('qr-app', base);
+  mkQR('qr-app-wifi', base);
+  mkQR('qr-treat', base + '/treatments');
+}
+document.getElementById('addr').addEventListener('input', update);
+
+// Tabs
+function setTab(which){
+  document.getElementById('tab-ts').classList.toggle('active', which==='ts');
+  document.getElementById('tab-wifi').classList.toggle('active', which==='wifi');
+  document.getElementById('panel-ts').classList.toggle('active', which==='ts');
+  document.getElementById('panel-wifi').classList.toggle('active', which==='wifi');
+}
+document.getElementById('tab-ts').addEventListener('click', ()=>setTab('ts'));
+document.getElementById('tab-wifi').addEventListener('click', ()=>setTab('wifi'));
+
+// If served from the running server, auto-fill the current origin as a sensible default.
+try{
+  if(location.protocol.startsWith('http')){
+    document.getElementById('addr').value = location.origin;
+    update();
+  }
+}catch(e){}
+</script>
+</body>
+</html>

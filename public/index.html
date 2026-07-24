@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sheila">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0c0c0d">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png">
+<title>Sheila McGavigan</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<style>
+  :root{
+    color-scheme: dark;
+    --bg:#0c0c0d; --surface:#141412; --surface-2:#1a1916; --ink:#f4efe6; --ink-dim:#8c8478;
+    --line:#26231d; --line-2:#3a342a;
+    --gold:#c9a24b; --gold-lt:#e7c873; --gold-deep:#a3812f;
+    --danger:#e0594f; --success:#5bbf86; --warn:#d8a23f;
+    --accent:var(--gold); --accent-2:var(--gold-lt);
+    --safe-top:env(safe-area-inset-top,0); --safe-bot:env(safe-area-inset-bottom,0);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;background:var(--bg);color:var(--ink);overscroll-behavior:none}
+  body{padding-top:var(--safe-top);padding-bottom:var(--safe-bot)}
+  input,textarea,select,button{font-family:inherit}
+  input,select,textarea{-webkit-user-select:text;user-select:text}
+  .app{max-width:600px;margin:0 auto;padding:0 16px 20px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+
+  /* Brand nameplate header */
+  .brand{text-align:center;padding:16px 0 16px;border-bottom:1px solid var(--line);margin-bottom:16px;position:relative}
+  .brand .name{font-size:15px;font-weight:600;letter-spacing:0.34em;color:var(--gold-lt);text-transform:uppercase;padding-left:0.34em}
+  .brand .sub{font-size:10.5px;font-weight:500;letter-spacing:0.32em;color:var(--ink-dim);text-transform:uppercase;margin-top:6px;padding-left:0.32em}
+  /* status dot tucked top-right, only shows a colour, no text clutter */
+  .treat-link{display:inline-block;margin-top:12px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--line-2);padding:5px 9px;border-radius:9px}
+  .treat-link:active{background:var(--surface-2)}
+  .status-dot{position:absolute;top:18px;right:2px;width:10px;height:10px;border-radius:50%;background:var(--warn);cursor:pointer;border:2px solid var(--bg);box-shadow:0 0 0 1px var(--line-2)}
+  .status-dot.online{background:var(--success)}
+  .status-dot.offline{background:var(--warn)}
+  .status-dot .badge{position:absolute;top:-7px;right:-7px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--danger);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--bg)}
+
+  /* Mode toggle */
+  .mode-toggle{display:flex;gap:8px;margin-bottom:20px}
+  .mode-toggle button{flex:1;text-align:center;padding:13px 0;border-radius:13px;font-size:14px;font-weight:600;cursor:pointer;border:1px solid var(--line-2);background:transparent;color:var(--gold);transition:all .15s}
+  .mode-toggle button.active{color:#0c0c0d;background:linear-gradient(180deg,var(--gold-lt),var(--gold));border-color:transparent}
+
+  .card{margin-bottom:14px}
+  .stage-title{text-align:center;margin-bottom:16px}
+  .stage-title h2{margin:0 0 5px;font-size:21px;font-weight:600;letter-spacing:-0.01em;color:var(--ink)}
+  .stage-title .hint{color:var(--ink-dim);font-size:13px;line-height:1.5;margin:0}
+
+  button.primary{display:block;width:100%;text-align:center;padding:18px;border-radius:16px;font-size:16px;font-weight:600;letter-spacing:0.01em;cursor:pointer;border:none;color:#0c0c0d;background:linear-gradient(180deg,var(--gold-lt),var(--gold));box-shadow:0 10px 24px -12px rgba(201,162,75,0.7);transition:transform .05s}
+  button.primary:active{transform:scale(0.985)} button.primary[disabled]{opacity:.45;cursor:not-allowed}
+  button.ghost{display:block;width:100%;text-align:center;padding:15px;border-radius:15px;font-size:15px;font-weight:500;cursor:pointer;background:transparent;color:var(--gold);border:1px solid var(--line-2)}
+  button.ghost:active{background:var(--surface-2)}
+
+  label{display:block;font-size:11px;color:var(--ink-dim);margin:16px 0 6px;text-transform:uppercase;letter-spacing:0.1em;font-weight:600}
+  input[type="text"],input[type="number"],input[type="date"],select{width:100%;padding:15px 14px;border:1px solid var(--line-2);border-radius:12px;background:var(--surface-2);color:var(--ink);font-size:16px;-webkit-appearance:none;appearance:none}
+  select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23c9a24b' d='M0 0l5 6 5-6z'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+  input:focus,select:focus{outline:none;border-color:var(--gold)}
+  .input-row{display:flex;gap:8px}.input-row>*{flex:1}.input-row .col-narrow{flex:0 0 110px}
+
+  /* Business/Personal segmented */
+  .seg{display:flex;gap:8px;margin-top:6px}
+  .seg button{flex:1;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-dim);padding:13px 0;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer}
+  .seg button.active{background:linear-gradient(180deg,var(--gold-lt),var(--gold));border-color:transparent;color:#0c0c0d}
+
+  /* Viewfinder preview */
+  .preview{position:relative;aspect-ratio:4/3;min-height:200px;background:#121210;border-radius:18px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#6a6358;overflow:hidden;margin-bottom:20px}
+  .preview::after{content:"";position:absolute;inset:8px;border-radius:13px;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(201,162,75,0.18)}
+  .preview .ph-icon{font-size:30px;color:var(--gold)}
+  .preview .ph-text{font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;font-weight:500}
+  .preview.has-img{border-color:var(--line-2)}
+  .preview.has-img::after{display:none}
+  .preview img{width:100%;height:100%;object-fit:contain;display:block}
+  .file-input{display:none}
+
+  .spinner{width:22px;height:22px;border:2.5px solid #3a342a;border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;vertical-align:middle;margin-right:10px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .status-row{display:flex;align-items:center;justify-content:center;color:var(--ink-dim);font-size:15px;margin:14px 0;min-height:22px}
+
+  .toast{position:fixed;bottom:calc(var(--safe-bot) + 80px);left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.94);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;z-index:200;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center;border:1px solid var(--line-2)}
+  .toast.show{opacity:1}.toast.success{border-color:var(--success);color:#cdeedd}.toast.error{border-color:var(--danger);color:#f6cfcb}.toast.info{border-color:var(--gold);color:#efdcae}
+  .error-banner{background:rgba(224,89,79,0.10);border:1px solid rgba(224,89,79,0.35);color:#f6cfcb;padding:12px 14px;border-radius:11px;font-size:13px;margin-bottom:12px;word-break:break-word}
+  .info-banner{background:rgba(216,162,63,0.10);border:1px solid rgba(216,162,63,0.35);color:#efdcae;padding:12px 14px;border-radius:11px;font-size:13px;margin-bottom:12px;word-break:break-word}
+  .high-amount-banner{background:rgba(216,162,63,0.12);border:1px solid rgba(216,162,63,0.45);color:#efdcae;padding:12px 14px;border-radius:11px;font-size:13px;margin-bottom:12px;font-weight:600;display:flex;align-items:center;gap:8px}
+
+  .pending-card{background:var(--surface);border:1px solid rgba(216,162,63,0.4);border-radius:16px;padding:14px 16px;margin-bottom:16px}
+  .pending-card h3{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--gold-lt);text-transform:uppercase;letter-spacing:0.08em}
+  .pending-card .pending-info{font-size:13px;color:var(--ink-dim);margin:0 0 12px}
+  .hidden{display:none !important}
+  datalist{color:#000}
+  @media(min-width:700px){body{padding:24px 0}.app{min-height:calc(100dvh - 48px);border:1px solid var(--line);border-radius:28px;background:rgba(255,255,255,0.012)}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Brand header -->
+  <header class="brand">
+    <div class="name">Sheila McGavigan</div>
+    <div class="sub">Permanent Makeup</div>
+    <a class="treat-link" href="/treatments" aria-label="Treatments and prices">Treatments &amp; prices</a>
+    <button class="status-dot offline" id="status-dot" title="Tap to sync now" aria-label="Connection status">
+      <span class="badge hidden" id="status-pending">0</span>
+    </button>
+  </header>
+
+  <!-- Mode toggle -->
+  <div class="mode-toggle" id="mode-toggle">
+    <button id="mode-out">Money out</button>
+    <button id="mode-in">Money in</button>
+    <button id="mode-trip">Trip</button>
+  </div>
+
+  <!-- Pending sync card -->
+  <section class="pending-card hidden" id="pending-card">
+    <h3>Waiting to save</h3>
+    <p class="pending-info" id="pending-card-info"></p>
+    <button class="ghost" id="sync-now-btn">Sync now</button>
+  </section>
+
+  <!-- Stage 1: capture -->
+  <section class="card" id="stage-capture">
+    <div class="stage-title">
+      <h2 id="capture-title">Capture a receipt</h2>
+      <p class="hint" id="capture-hint">Take the photo — the details fill in for you.</p>
+    </div>
+    <div class="preview" id="preview">
+      <span class="ph-icon">&#9672;</span>
+      <span class="ph-text">No photo yet</span>
+    </div>
+    <button class="primary" id="take-photo-btn">Take photo</button>
+    <button class="ghost" id="choose-file-btn" style="margin-top:10px">Choose from photos</button>
+    <button class="ghost" id="manual-btn" style="margin-top:10px">Enter manually</button>
+    <!-- camera capture -->
+    <input type="file" id="file-input" class="file-input" accept="image/*" capture="environment">
+    <!-- library / files picker (no forced camera) -->
+    <input type="file" id="file-pick" class="file-input" accept="image/*">
+  </section>
+
+  <!-- Stage 2: processing -->
+  <section class="card hidden" id="stage-processing">
+    <div class="status-row"><span class="spinner"></span><span>Reading your receipt…</span></div>
+    <p class="hint" style="text-align:center;color:var(--ink-dim);font-size:13px;margin:0">Just a moment.</p>
+  </section>
+
+  <!-- Stage 3: review -->
+  <section class="card hidden" id="stage-review">
+    <div class="stage-title">
+      <h2>Check the details</h2>
+      <p class="hint" id="review-hint">Fix anything that looks wrong, then save.</p>
+    </div>
+    <div id="offline-notice" class="info-banner hidden">Offline — fill the details in; it'll save when the connection is back.</div>
+    <div id="high-amount-banner" class="high-amount-banner hidden"><span>&#9888;</span><span id="high-amount-text"></span></div>
+    <div id="review-error" class="error-banner hidden"></div>
+
+    <!-- OUT fields -->
+    <div id="out-fields">
+      <label for="f-merchant">Where from</label>
+      <input type="text" id="f-merchant" autocomplete="off" placeholder="Shop or supplier">
+      <label for="f-article">Category</label>
+      <select id="f-article"></select>
+      <label>Business or personal</label>
+      <div class="seg" id="bp-seg">
+        <button type="button" data-bp="Business" class="active">Business</button>
+        <button type="button" data-bp="Personal">Personal</button>
+      </div>
+    </div>
+
+    <!-- IN fields -->
+    <div id="in-fields" class="hidden">
+      <label for="f-client">Client name</label>
+      <input type="text" id="f-client" autocomplete="off" list="client-suggestions" placeholder="Who paid you">
+      <datalist id="client-suggestions"></datalist>
+      <label for="f-treatment">Treatment</label>
+      <select id="f-treatment"></select>
+    </div>
+
+    <label for="f-date">Date</label>
+    <input type="date" id="f-date">
+    <div class="input-row">
+      <div><label for="f-total">Amount</label><input type="number" id="f-total" step="0.01" inputmode="decimal"></div>
+      <div class="col-narrow"><label for="f-currency">Currency</label><input type="text" id="f-currency" autocomplete="off" autocapitalize="characters" maxlength="6" placeholder="EUR"></div>
+    </div>
+    <label for="f-receipt">Receipt number <span style="text-transform:none;letter-spacing:0;color:var(--ink-dim)">(optional)</span></label>
+    <input type="text" id="f-receipt" autocomplete="off">
+    <label for="f-note">Note <span style="text-transform:none;letter-spacing:0;color:var(--ink-dim)">(optional)</span></label>
+    <input type="text" id="f-note" autocomplete="off">
+
+    <div style="margin-top:20px">
+      <button class="primary" id="save-btn">Save</button>
+      <button class="ghost" id="retake-btn" style="margin-top:10px">Discard &amp; retake</button>
+    </div>
+  </section>
+
+  <!-- Stage 4: saved -->
+  <section class="card hidden" id="stage-saved">
+    <div class="stage-title">
+      <h2 id="saved-title" style="color:var(--success)">Saved &#10003;</h2>
+      <p class="hint" id="saved-meta"></p>
+    </div>
+    <button class="primary" id="next-btn">Next receipt</button>
+  </section>
+
+  <!-- Stage: Trip (Reise) — camera-free business-trip logger -->
+  <section class="card hidden" id="stage-trip">
+    <div class="stage-title">
+      <h2 id="trip-title">Log a trip</h2>
+      <p class="hint" id="trip-hint">Tap Start when you leave. Tap Finish when you get home.</p>
+    </div>
+    <div id="trip-error" class="error-banner hidden"></div>
+
+    <!-- No open trip -->
+    <div id="trip-start-view">
+      <select id="trip-purpose" aria-label="Trip purpose" style="display:none"></select>
+      <div style="margin-top:20px"><button class="primary" id="trip-start-btn">Start trip</button></div>
+    </div>
+
+    <!-- Open trip -->
+    <div id="trip-open-view" class="hidden">
+      <section class="pending-card" style="border-color:rgba(201,162,75,0.4)">
+        <h3 id="trip-open-purpose">Trip</h3>
+        <p class="pending-info" id="trip-open-summary">Trip in progress.</p>
+        <div id="trip-legs"></div>
+      </section>
+
+      <div style="display:none" aria-hidden="true">
+        <label for="leg-from">From</label><input type="text" id="leg-from" list="place-suggestions">
+        <label for="leg-to">To</label><input type="text" id="leg-to" list="place-suggestions">
+        <datalist id="place-suggestions"></datalist>
+        <input type="number" id="leg-km" step="0.1">
+        <div class="seg" id="leg-overnight-seg"><button type="button" data-on="no" class="active">No</button><button type="button" data-on="yes">Overnight</button></div>
+        <button class="primary" id="leg-add-btn" type="button">Add this drive</button>
+      </div>
+
+      <input type="hidden" id="trip-note" value="">
+      <div style="margin-top:16px">
+        <button class="primary" id="trip-end-btn">Finish trip</button>
+        <button class="ghost" id="trip-cancel-btn" style="margin-top:10px">Cancel</button>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+const _sheilaFetch=window.fetch.bind(window);
+function _csrf(){return decodeURIComponent((document.cookie.match(/(?:^|; )sheila_csrf=([^;]*)/)||[])[1]||'');}
+window.fetch=(input,init={})=>{const u=new URL(typeof input==='string'?input:input.url,location.href);
+  const method=(init.method||(typeof input!=='string'&&input.method)||'GET').toUpperCase();
+  if(u.origin===location.origin&&u.pathname.startsWith('/api/')&&!['GET','HEAD','OPTIONS'].includes(method)){
+    const h=new Headers(init.headers||{}),token=_csrf();if(token)h.set('X-CSRF-Token',token);init={...init,headers:h};}
+  return _sheilaFetch(input,init);};
+const APP_VERSION = 'v7';
+const ARTICLES = ['Fuel','Meals (Travel)','Client Entertainment','Accommodation','Parking','Vehicle expenses','Phone & Internet','Insurance','Training & Education','Marketing & Advertising','Equipment & Tools','General Business Expenses','PMU Pigments & Inks','PMU Needles & Cartridges','PMU Equipment & Machines','Skincare & Treatment Products','Disposables & PPE','Salon Supplies'];
+const HIGH_AMOUNT_THRESHOLD = 300;
+
+const els = {};
+['status-dot','status-pending','pending-card','pending-card-info','sync-now-btn',
+ 'mode-out','mode-in','file-input','file-pick','take-photo-btn','choose-file-btn','manual-btn','preview','capture-title','capture-hint',
+ 'stage-capture','stage-processing','stage-review','stage-saved','offline-notice','high-amount-banner','high-amount-text',
+ 'review-error','review-hint','out-fields','in-fields','f-merchant','f-article','bp-seg','f-client','client-suggestions',
+ 'f-treatment','f-date','f-total','f-currency','f-receipt','f-note',
+ 'save-btn','retake-btn','next-btn','saved-title','saved-meta','toast',
+ 'mode-trip','stage-trip','trip-title','trip-hint','trip-error','trip-start-view','trip-purpose','trip-start-btn',
+ 'trip-open-view','trip-open-purpose','trip-open-summary','trip-legs','leg-from','leg-to','place-suggestions',
+ 'leg-km','leg-overnight-seg','leg-add-btn','trip-note','trip-end-btn','trip-cancel-btn'
+].forEach(id => els[id.replace(/-([a-z])/g,(_,c)=>c.toUpperCase())] = document.getElementById(id));
+
+let currentObjectUrl=null, currentBase64=null, currentGeo=null, geoPromise=null;
+let isLaptopReachable=false, syncInProgress=false, businessPersonal='Business', treatments=[];
+let mode = ['in','trip'].includes(localStorage.getItem('sheila_mode')) ? localStorage.getItem('sheila_mode') : 'out';
+let tripOvernight = 'no';
+let activeTripToken = '';
+
+for(const a of ARTICLES){const o=document.createElement('option');o.value=a;o.textContent=a;els.fArticle.appendChild(o);}
+
+/* ---------- mode toggle ---------- */
+function applyMode(){
+  const isIn = mode==='in', isTrip = mode==='trip';
+  els.modeOut.classList.toggle('active',mode==='out');
+  els.modeIn.classList.toggle('active',isIn);
+  els.modeTrip.classList.toggle('active',isTrip);
+  els.outFields.classList.toggle('hidden',mode!=='out');
+  els.inFields.classList.toggle('hidden',mode!=='in');
+  if(!isTrip){
+    els.captureTitle.textContent = isIn ? 'Capture a payment' : 'Capture a receipt';
+    els.captureHint.textContent = isIn
+      ? "Photograph the client's invoice or receipt — the details fill in for you."
+      : 'Take the photo — the details fill in for you.';
+  }
+  localStorage.setItem('sheila_mode', mode);
+}
+els.modeOut.addEventListener('click',()=>{mode='out';applyMode();resetCapture();});
+els.modeIn.addEventListener('click',()=>{mode='in';applyMode();resetCapture();});
+els.modeTrip.addEventListener('click',()=>{mode='trip';applyMode();enterTrip();});
+
+/* ---------- business/personal ---------- */
+els.bpSeg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  els.bpSeg.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); businessPersonal=b.dataset.bp;
+}));
+
+/* ---------- treatments + client suggestions ---------- */
+async function loadTreatments(){
+  try{
+    const r=await fetch('/api/treatments',{cache:'no-store'});
+    if(r.ok){const j=await r.json();treatments=j.treatments||[];}
+  }catch(e){ treatments = JSON.parse(localStorage.getItem('sheila_treatments')||'[]'); }
+  localStorage.setItem('sheila_treatments',JSON.stringify(treatments));
+  els.fTreatment.innerHTML='';
+  const blank=document.createElement('option');blank.value='';blank.textContent='— choose —';els.fTreatment.appendChild(blank);
+  for(const t of treatments){const o=document.createElement('option');o.value=t.name;o.textContent=t.price?`${t.name} (${t.price})`:t.name;o.dataset.price=t.price||'';els.fTreatment.appendChild(o);}
+}
+els.fTreatment.addEventListener('change',()=>{
+  const opt=els.fTreatment.selectedOptions[0];
+  const price=opt&&opt.dataset.price;
+  if(price&&!els.fTotal.value){els.fTotal.value=price; if(!els.fCurrency.value)els.fCurrency.value='EUR';}
+});
+function rememberClient(name){
+  if(!name)return; let list=JSON.parse(localStorage.getItem('sheila_clients')||'[]');
+  list=[name,...list.filter(n=>n!==name)].slice(0,40);
+  localStorage.setItem('sheila_clients',JSON.stringify(list));
+}
+function renderClientSuggestions(){
+  const list=JSON.parse(localStorage.getItem('sheila_clients')||'[]');
+  els.clientSuggestions.innerHTML=list.map(n=>`<option value="${n.replace(/"/g,'&quot;')}">`).join('');
+}
+
+/* ===================================================================
+   IndexedDB queue (dual endpoint: each item carries its mode)
+   =================================================================== */
+const DB_NAME='sheila_queue_db',DB_VERSION=1,STORE='pending';
+let _dbPromise=null;
+function openDb(){
+  if(_dbPromise)return _dbPromise;
+  _dbPromise=new Promise((res,rej)=>{
+    const r=indexedDB.open(DB_NAME,DB_VERSION);
+    r.onupgradeneeded=e=>{const db=e.target.result; if(!db.objectStoreNames.contains(STORE)){const s=db.createObjectStore(STORE,{keyPath:'id',autoIncrement:true});s.createIndex('createdAt','createdAt');}};
+    r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);
+  });
+  return _dbPromise;
+}
+async function queueAdd(item){const db=await openDb();return new Promise((res,rej)=>{const tx=db.transaction([STORE],'readwrite');const rq=tx.objectStore(STORE).add({...item,createdAt:Date.now()});rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error);});}
+async function queueList(){const db=await openDb();return new Promise((res,rej)=>{const tx=db.transaction([STORE],'readonly');const rq=tx.objectStore(STORE).index('createdAt').getAll();rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error);});}
+async function queueRemove(id){const db=await openDb();return new Promise((res,rej)=>{const tx=db.transaction([STORE],'readwrite');const rq=tx.objectStore(STORE).delete(id);rq.onsuccess=()=>res();rq.onerror=()=>rej(rq.error);});}
+async function queueCount(){const db=await openDb();return new Promise((res,rej)=>{const tx=db.transaction([STORE],'readonly');const rq=tx.objectStore(STORE).count();rq.onsuccess=()=>res(rq.result);rq.onerror=()=>rej(rq.error);});}
+
+/* ===================================================================
+   Connectivity + status
+   =================================================================== */
+async function probeLaptop(){
+  if(!navigator.onLine){isLaptopReachable=false;return false;}
+  try{const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),4000);
+    const r=await fetch('/api/health',{signal:ctl.signal,cache:'no-store'});clearTimeout(t);isLaptopReachable=r.ok;}
+  catch(e){isLaptopReachable=false;}
+  return isLaptopReachable;
+}
+async function refreshStatusUI(){
+  const count=await queueCount();
+  els.statusDot.classList.toggle('online',isLaptopReachable);
+  els.statusDot.classList.toggle('offline',!isLaptopReachable);
+  els.statusDot.title = isLaptopReachable ? 'Connected — tap to sync' : 'Not connected — tap to retry';
+  if(count>0){els.statusPending.textContent=String(count);els.statusPending.classList.remove('hidden');els.pendingCard.classList.remove('hidden');
+    els.pendingCardInfo.textContent=(count===1?'1 receipt':count+' receipts')+' saved on your phone — they file automatically when you’re connected.';}
+  else{els.statusPending.classList.add('hidden');els.pendingCard.classList.add('hidden');}
+}
+async function tick(){
+  await probeLaptop();await refreshStatusUI();
+  if(isLaptopReachable){const c=await queueCount();if(c>0)syncQueue(false);}
+  if(await queueCount()>0)requestBackgroundSync();
+}
+let tickTimer=null;
+function startTicking(){if(tickTimer)clearInterval(tickTimer);tick();tickTimer=setInterval(tick,20000);}
+window.addEventListener('online',tick);
+window.addEventListener('offline',()=>{isLaptopReachable=false;refreshStatusUI();});
+window.addEventListener('focus',tick);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){tick();loadTreatments();}});
+
+async function requestBackgroundSync(){
+  try{const reg=await navigator.serviceWorker.ready; if('sync' in reg)await reg.sync.register('drain-queue'); if(reg.active)reg.active.postMessage({type:'drain-now'});}
+  catch(e){}
+}
+
+/* ===================================================================
+   Queue sync — POST each item to its mode's endpoint
+   =================================================================== */
+function endpointFor(m){return m==='in'?'/api/save-in':'/api/save-out';}
+function newOperationId(){
+  if(globalThis.crypto&&crypto.randomUUID)return crypto.randomUUID();
+  return 'receipt-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
+}
+function payloadFromItem(it){
+  const base={operationId:it.operationId||('queued-'+it.id+'-'+it.createdAt),csrfToken:it.csrfToken||'',date:it.date||'',totalCost:Number(it.totalCost)||0,currency:it.currency||'',receiptCode:it.receiptCode||'',note:it.note||'',image:it.image,lat:it.lat,lng:it.lng,capturedAt:it.capturedAt||''};
+  if(it.mode==='in')return {...base,clientName:it.clientName||'',treatment:it.treatment||''};
+  return {...base,merchant:it.merchant||'',article:it.article||'General Business Expenses',businessPersonal:it.businessPersonal||'Business'};
+}
+async function syncQueue(manual=false){
+  if(syncInProgress||!isLaptopReachable)return;
+  syncInProgress=true;let filed=0;
+  try{
+    const items=await queueList();if(!items.length)return;
+    if(manual)toast('Saving '+items.length+' waiting…','info',1800);
+    for(const item of items){
+      try{
+        const resp=await fetch(endpointFor(item.mode),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payloadFromItem(item))});
+        if(!resp.ok){let why='HTTP '+resp.status;try{const j=await resp.json();why=j.message||j.error||why;}catch(_){}
+          const e=new Error(why);if(resp.status===423)e.excelOpen=true;throw e;}
+        await queueRemove(item.id);filed++;
+      }catch(e){
+        if(e.excelOpen){if(manual)toast('Close the spreadsheet on the laptop — these will then save','info',4000);}
+        else if(manual)toast('Will keep trying','error');
+        break;
+      }
+    }
+    if(filed>0&&manual){const rem=await queueCount();if(rem===0)toast('All saved','success');}
+    await refreshStatusUI();
+  }finally{syncInProgress=false;}
+}
+els.syncNowBtn.addEventListener('click',async()=>{await probeLaptop();await refreshStatusUI();isLaptopReachable?syncQueue(true):toast('Not connected yet','error');});
+els.statusDot.addEventListener('click',async()=>{await probeLaptop();await refreshStatusUI();if(isLaptopReachable)syncQueue(true);else toast('Not connected yet','error');});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+  navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.type==='queue-drained')tick();});
+}
+
+/* ===================================================================
+   Utilities
+   =================================================================== */
+function show(stage){for(const s of ['stageCapture','stageProcessing','stageReview','stageSaved','stageTrip'])els[s].classList.toggle('hidden',s!==stage);}
+function toast(msg,kind='',ms=2400){els.toast.textContent=msg;els.toast.className='toast show'+(kind?' '+kind:'');clearTimeout(toast._t);toast._t=setTimeout(()=>els.toast.className='toast',ms);}
+function showError(m){els.reviewError.textContent=m;els.reviewError.classList.remove('hidden');}
+function clearError(){els.reviewError.textContent='';els.reviewError.classList.add('hidden');}
+function setPreview(file){if(currentObjectUrl)URL.revokeObjectURL(currentObjectUrl);currentObjectUrl=URL.createObjectURL(file);els.preview.innerHTML='';const img=document.createElement('img');img.src=currentObjectUrl;els.preview.appendChild(img);els.preview.classList.add('has-img');}
+async function fileToBase64(file,maxDim=1600,quality=0.85){
+  const url=URL.createObjectURL(file);let img;
+  try{img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('decode failed'));i.src=url;});}finally{URL.revokeObjectURL(url);}
+  let w=img.width,h=img.height;const s=Math.min(1,maxDim/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);
+  const cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);
+  return cv.toDataURL('image/jpeg',quality).split(',',2)[1];
+}
+
+/* ---------- GPS (captured silently — no UI shown) ---------- */
+function doGeolocate(){return new Promise(res=>{
+  if(!('geolocation' in navigator))return res({ok:false});
+  if(!window.isSecureContext)return res({ok:false});
+  navigator.geolocation.getCurrentPosition(
+    p=>res({ok:true,lat:p.coords.latitude,lng:p.coords.longitude}),
+    e=>res({ok:false}),
+    {enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+});}
+async function requestLocation(){
+  geoPromise=doGeolocate();const r=await geoPromise;
+  currentGeo = r.ok ? {lat:r.lat,lng:r.lng} : null;
+  return r;
+}
+
+/* ===================================================================
+   Capture flow
+   =================================================================== */
+// Take photo = camera; Choose from photos = library/files (no forced camera).
+els.takePhotoBtn.addEventListener('click',()=>{requestLocation();els.fileInput.click();});
+els.chooseFileBtn.addEventListener('click',()=>{requestLocation();els.filePick.click();});
+
+// Enter manually: no image at all — straight to a blank review form. The server
+// generates a tidy receipt card from whatever she types.
+els.manualBtn.addEventListener('click',async()=>{
+  currentBase64=null;
+  els.preview.innerHTML='<span class="ph-icon">&#9672;</span><span class="ph-text">Typed in — no photo</span>';
+  els.preview.classList.remove('has-img');
+  await probeLaptop();await refreshStatusUI();
+  populateForm({},{offline:!isLaptopReachable});
+  els.offlineNotice.classList.toggle('hidden',isLaptopReachable);
+  els.reviewHint.textContent='Fill in the details, then save.';
+  show('stageReview');clearError();
+});
+
+async function handlePickedImage(file){
+  if(!file)return;
+  setPreview(file);currentBase64=await fileToBase64(file);
+  await probeLaptop();await refreshStatusUI();
+  if(isLaptopReachable){
+    show('stageProcessing');
+    try{
+      const resp=await fetch('/api/process-receipt',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:currentBase64,mimeType:'image/jpeg',mode})});
+      if(!resp.ok){const eb=await resp.json().catch(()=>({error:'HTTP '+resp.status}));throw new Error(eb.error||'Server error');}
+      const fields=await resp.json();
+      if(isIllegible(fields)){showIllegible();return;}
+      populateForm(fields,{offline:false});
+      els.offlineNotice.classList.add('hidden');
+      els.reviewHint.textContent=(fields.confidence!=null&&fields.confidence<0.6)?'Not fully sure on this one — please double-check.':'Fix anything that looks wrong, then save.';
+      show('stageReview');clearError();
+    }catch(err){
+      populateForm({},{offline:false});els.offlineNotice.classList.add('hidden');
+      els.reviewHint.textContent='Couldn’t read it automatically — fill in the details.';
+      show('stageReview');showError("Couldn't read it: "+err.message);
+    }
+  }else{
+    populateForm({},{offline:true});els.offlineNotice.classList.remove('hidden');
+    els.reviewHint.textContent='Offline — fill the details in; it saves later.';
+    show('stageReview');clearError();
+  }
+}
+els.fileInput.addEventListener('change',async()=>{const f=els.fileInput.files&&els.fileInput.files[0];els.fileInput.value='';await handlePickedImage(f);});
+els.filePick.addEventListener('change',async()=>{const f=els.filePick.files&&els.filePick.files[0];els.filePick.value='';await handlePickedImage(f);});
+function isIllegible(f){const conf=Number(f&&f.confidence);const empty=!String((f&&(f.merchant||f.clientName))||'').trim()&&!(Number(f&&f.totalCost)>0)&&!(f&&f.date);const veryLow=(f&&f.confidence!=null&&!Number.isNaN(conf)&&conf>0&&conf<0.25);return empty||veryLow;}
+function showIllegible(){els.savedTitle.innerHTML="Couldn’t read it";els.savedTitle.style.color='var(--danger)';els.savedMeta.textContent="Too blurry to read. Retake a sharper photo — good light, hold it flat, fill the frame.";els.nextBtn.textContent='Retake';toast('Too blurry','error');show('stageSaved');}
+
+function populateForm(data,opts){
+  opts=opts||{};
+  els.fDate.value=data.date||new Date().toISOString().slice(0,10);
+  els.fTotal.value=(data.totalCost!=null&&data.totalCost!=='')?String(data.totalCost):'';
+  els.fCurrency.value=(data.currency||'').toUpperCase();
+  els.fReceipt.value=data.receiptCode||'';
+  els.fNote.value='';
+  if(mode==='out'){
+    els.fMerchant.value=data.merchant||'';
+    els.fArticle.value=ARTICLES.includes(data.article)?data.article:'General Business Expenses';
+    businessPersonal='Business';els.bpSeg.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.bp==='Business'));
+  }else{
+    els.fClient.value=data.clientName||'';
+    const t=(data.treatment||'').toLowerCase();
+    const match=treatments.find(x=>x.name.toLowerCase()===t)||treatments.find(x=>t&&x.name.toLowerCase().includes(t));
+    els.fTreatment.value=match?match.name:'';
+    if(match&&match.price&&!els.fTotal.value)els.fTotal.value=match.price;
+  }
+  const total=Number(data.totalCost)||0;
+  if(!opts.offline&&total>HIGH_AMOUNT_THRESHOLD){
+    els.highAmountText.textContent=`Large amount: ${total.toFixed(2)} ${els.fCurrency.value||''} — please double-check`;
+    els.highAmountBanner.classList.remove('hidden');
+    if('vibrate' in navigator){try{navigator.vibrate([180,90,180]);}catch(e){}}
+  }else els.highAmountBanner.classList.add('hidden');
+}
+
+/* ===================================================================
+   Save
+   =================================================================== */
+els.saveBtn.addEventListener('click',async()=>{
+  if(geoPromise){els.saveBtn.disabled=true;els.saveBtn.textContent='One moment…';try{await geoPromise;}catch(_){}}
+  const common={operationId:newOperationId(),csrfToken:_csrf(),date:els.fDate.value,totalCost:parseFloat(els.fTotal.value)||0,currency:els.fCurrency.value.trim().toUpperCase(),receiptCode:els.fReceipt.value.trim(),note:els.fNote.value.trim(),image:currentBase64,lat:currentGeo?currentGeo.lat:null,lng:currentGeo?currentGeo.lng:null,capturedAt:new Date().toISOString(),mode};
+  let payload;
+  if(mode==='out')payload={...common,merchant:els.fMerchant.value.trim(),article:els.fArticle.value,businessPersonal};
+  else{const cn=els.fClient.value.trim();payload={...common,clientName:cn,treatment:els.fTreatment.value};rememberClient(cn);}
+
+  const hasName = mode==='out'?payload.merchant:payload.clientName;
+  if(!hasName&&!payload.date&&!payload.totalCost&&!payload.receiptCode){showError('Please fill in at least one detail.');els.saveBtn.disabled=false;els.saveBtn.textContent='Save';return;}
+  // Image is optional — manual entries have none; the server makes a receipt card.
+
+  els.saveBtn.disabled=true;els.saveBtn.textContent='Saving…';
+  try{
+    const queuedId=await queueAdd(payload);
+    await probeLaptop();let savedSerial=null,fxFlag=false;
+    if(isLaptopReachable){
+      try{
+        const resp=await fetch(endpointFor(mode),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        if(!resp.ok){const eb=await resp.json().catch(()=>({error:'HTTP '+resp.status}));throw new Error(eb.error||'Server error');}
+        const result=await resp.json();savedSerial=result.serial;fxFlag=result.fxFlagged;await queueRemove(queuedId);
+      }catch(e){isLaptopReachable=false;}
+    }
+    await refreshStatusUI();
+    if(savedSerial){
+      els.savedTitle.innerHTML='Saved &#10003;';els.savedTitle.style.color='var(--success)';
+      els.savedMeta.innerHTML=`Filed as #${savedSerial}.${fxFlag?'<br>The exchange rate wasn’t available — flagged for a quick check.':''}`;
+      toast('Saved','success');
+    }else{
+      els.savedTitle.textContent='Saved on your phone';els.savedTitle.style.color='var(--warn)';
+      const c=await queueCount();els.savedMeta.textContent=`Stored safely (${c} waiting). It files automatically once you’re connected.`;
+      toast('Saved on your phone','info');
+    }
+    show('stageSaved');
+  }catch(err){showError("Couldn't save: "+err.message);toast('Save failed','error');}
+  finally{els.saveBtn.disabled=false;els.saveBtn.textContent='Save';}
+});
+
+els.retakeBtn.addEventListener('click',resetCapture);
+els.nextBtn.addEventListener('click',resetCapture);
+function resetCapture(){
+  if(currentObjectUrl){URL.revokeObjectURL(currentObjectUrl);currentObjectUrl=null;}
+  currentBase64=null;els.nextBtn.textContent='Next receipt';els.savedTitle.style.color='var(--success)';
+  els.preview.innerHTML='<span class="ph-icon">&#9672;</span><span class="ph-text">No photo yet</span>';els.preview.classList.remove('has-img');
+  populateForm({},{offline:!isLaptopReachable});els.offlineNotice.classList.add('hidden');els.highAmountBanner.classList.add('hidden');clearError();
+  show('stageCapture');
+}
+
+/* ===================================================================
+   Trip (Reise) — camera-free business-trip logger. Server-backed:
+   the open trip lives on the laptop (open-trip.json) so a multi-day
+   journey survives app/phone restarts.
+   =================================================================== */
+function escapeHtml(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function tripError(m){els.tripError.textContent=m;els.tripError.classList.remove('hidden');}
+function clearTripError(){els.tripError.textContent='';els.tripError.classList.add('hidden');}
+
+els.legOvernightSeg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  els.legOvernightSeg.querySelectorAll('button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); tripOvernight=b.dataset.on;
+}));
+
+async function loadPurposes(){
+  let purposes=['Client appointment','Supply / stock run','Training / course','Marketing / networking'];
+  try{const r=await fetch('/api/trip/purposes',{cache:'no-store'});if(r.ok){const j=await r.json();if(Array.isArray(j.purposes)&&j.purposes.length)purposes=j.purposes;}}catch(_){}
+  els.tripPurpose.innerHTML='';
+  for(const p of purposes){const o=document.createElement('option');o.value=p;o.textContent=p;els.tripPurpose.appendChild(o);}
+}
+async function loadPlaces(){
+  let places=[];
+  try{const r=await fetch('/api/places',{cache:'no-store'});if(r.ok){places=(await r.json()).places||[];}}catch(_){}
+  els.placeSuggestions.innerHTML=places.map(p=>`<option value="${escapeHtml(p.name)}">`).join('');
+}
+async function enterTrip(){show('stageTrip');clearTripError();await Promise.all([loadPurposes(),loadPlaces()]);await refreshTrip();}
+
+async function refreshTrip(){
+  let trip=null,ok=true;
+  try{const r=await fetch('/api/trip/active',{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);trip=(await r.json()).trip;}
+  catch(e){ok=false;tripError('Not connected — trips need the laptop reachable. Try again when online.');}
+  const open=!!trip;
+  activeTripToken=open?(trip.tripToken||''):'';
+  els.tripStartView.classList.toggle('hidden',open||!ok);
+  els.tripOpenView.classList.toggle('hidden',!open);
+  if(open){
+    els.tripOpenPurpose.textContent=trip.purpose||'Trip';
+    const legs=trip.legs||[];
+    const km=Math.round(legs.reduce((s,l)=>s+(Number(l.km)||0),0)*10)/10;
+    const nights=legs.filter(l=>l.overnight).length;
+    els.tripOpenSummary.textContent=legs.length
+      ? `${legs.length} drive${legs.length>1?'s':''} · ${km} km${nights?` · ${nights} overnight${nights>1?'s':''}`:''}`
+      : 'No drives added yet.';
+    els.tripLegs.innerHTML=legs.map(l=>`<div style="font-size:13px;color:var(--ink);padding:6px 0;border-top:1px solid var(--line)">${escapeHtml(l.from)} &rarr; ${escapeHtml(l.to)} · ${Number(l.km)||0} km${l.overnight?' · &#127769;':''}</div>`).join('');
+    if(legs.length&&!els.legFrom.value)els.legFrom.value=legs[legs.length-1].to;
+  }
+}
+
+els.tripStartBtn.addEventListener('click',async()=>{
+  clearTripError();els.tripStartBtn.disabled=true;els.tripStartBtn.textContent='Starting…';
+  try{
+    const r=await fetch('/api/trip/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({purpose:els.tripPurpose.value})});
+    const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error||'HTTP '+r.status);
+    els.legFrom.value='';els.legTo.value='';els.legKm.value='';
+    await refreshTrip();toast('Trip started','success');
+  }catch(e){tripError(e.message);}finally{els.tripStartBtn.disabled=false;els.tripStartBtn.textContent='Start trip';}
+});
+
+els.legAddBtn.addEventListener('click',async()=>{
+  clearTripError();
+  const from=els.legFrom.value.trim(),to=els.legTo.value.trim();
+  if(!from||!to){tripError('Enter both From and To.');return;}
+  const body={from,to,overnight:tripOvernight==='yes',
+    tripToken:activeTripToken,operationId:newOperationId()};
+  const kmVal=els.legKm.value.trim();if(kmVal)body.km=parseFloat(kmVal);
+  els.legAddBtn.disabled=true;els.legAddBtn.textContent='Adding…';
+  try{
+    const r=await fetch('/api/trip/leg',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const j=await r.json().catch(()=>({}));
+    if(r.status===422){tripError(j.message||'Enter the km for this drive.');els.legKm.focus();return;}
+    if(!r.ok)throw new Error(j.message||j.error||'HTTP '+r.status);
+    els.legTo.value='';els.legKm.value='';els.legFrom.value=(j.leg&&j.leg.to)||'';
+    els.legOvernightSeg.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.on==='no'));tripOvernight='no';
+    await refreshTrip();
+    toast(j.autoDistance?`Added · ${j.leg.km} km (auto)`:'Drive added','success');
+  }catch(e){tripError(e.message);}finally{els.legAddBtn.disabled=false;els.legAddBtn.textContent='Add this drive';}
+});
+
+els.tripEndBtn.addEventListener('click',async()=>{
+  clearTripError();els.tripEndBtn.disabled=true;els.tripEndBtn.textContent='Saving…';
+  try{
+    const r=await fetch('/api/trip/end',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({note:els.tripNote.value.trim()})});
+    const j=await r.json().catch(()=>({}));
+    if(r.status===423){tripError(j.message||'Close the spreadsheet on the laptop, then end again.');return;}
+    if(!r.ok)throw new Error(j.message||j.error||'HTTP '+r.status);
+    els.tripNote.value='';await refreshTrip();
+    toast(`Trip #${j.trip} saved · ${j.km} km`,'success',3400);
+  }catch(e){tripError(e.message);}finally{els.tripEndBtn.disabled=false;els.tripEndBtn.textContent='Finish trip';}
+});
+
+// Two-tap discard (avoids a blocking browser dialog).
+let cancelArmed=false,cancelTimer=null;
+els.tripCancelBtn.addEventListener('click',async()=>{
+  if(!cancelArmed){cancelArmed=true;els.tripCancelBtn.textContent='Tap again to discard';clearTimeout(cancelTimer);cancelTimer=setTimeout(()=>{cancelArmed=false;els.tripCancelBtn.textContent='Cancel trip';},3500);return;}
+  cancelArmed=false;clearTimeout(cancelTimer);els.tripCancelBtn.textContent='Cancel trip';
+  try{await fetch('/api/trip/cancel',{method:'POST'});await refreshTrip();toast('Trip discarded','info');}catch(e){tripError(e.message);}
+});
+
+/* ---------- init ---------- */
+applyMode();
+loadTreatments();
+renderClientSuggestions();
+requestLocation();
+if(mode==='trip')enterTrip();else show('stageCapture');
+startTicking();
+</script>
+<script>
+/* ---- In-app auto-update banner (self-contained) --------------------------- */
+'use strict';
+(function () {
+  async function initUpdateChecker() {
+    const check = async () => {
+      try {
+        const r = await fetch('/api/update-check', { cache: 'no-store' });
+        if (!r.ok) return;
+        const d = await r.json();
+        if (d && d.updateAvailable) showUpdateBanner(d); else hideUpdateBanner();
+      } catch (_) {}
+    };
+    check();
+    setInterval(check, 6 * 60 * 60 * 1000);
+  }
+  function hideUpdateBanner() {
+    const el = document.getElementById('update-modal');
+    if (el) el.remove();
+  }
+  function showUpdateBanner(info) {
+    if (document.getElementById('update-modal')) return;
+    const wrap = document.createElement('div');
+    wrap.id = 'update-modal';
+    wrap.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.5)';
+    const card = document.createElement('div');
+    card.style.cssText = 'width:100%;max-width:320px;background:var(--surface-2,#1a1a1c);color:var(--ink,#ececee);border:1px solid var(--line-2,#333);border-radius:16px;padding:22px 20px;box-shadow:0 24px 60px rgba(0,0,0,.55);text-align:center';
+    const h = document.createElement('div');
+    h.textContent = 'Update available';
+    h.style.cssText = 'font:700 17px Inter,system-ui;color:var(--gold-lt,#e8c98a);margin-bottom:6px';
+    const sub = document.createElement('div');
+    const from = info.current || '', to = info.latest || '';
+    sub.textContent = (from && to) ? (from + ' → ' + to) : 'A newer version is ready to install.';
+    sub.style.cssText = 'font:400 12px/1.5 Inter,system-ui;opacity:.7;margin-bottom:18px;word-break:break-word';
+    const btn = document.createElement('button');
+    btn.textContent = 'Update now';
+    btn.style.cssText = 'width:100%;border:0;cursor:pointer;border-radius:12px;padding:13px 0;font:600 15px Inter,system-ui;background:linear-gradient(180deg,var(--gold-lt,#e8c98a),var(--gold,#c9a24a));color:#0c0c0d;margin-bottom:6px';
+    const later = document.createElement('button');
+    later.textContent = 'Later';
+    later.style.cssText = 'width:100%;border:0;background:transparent;color:inherit;opacity:.6;cursor:pointer;padding:9px 0;font:500 13px Inter,system-ui';
+    later.onclick = () => wrap.remove();
+    btn.onclick = () => runUpdate(btn, sub, later);
+    card.appendChild(h); card.appendChild(sub); card.appendChild(btn); card.appendChild(later);
+    wrap.appendChild(card);
+    document.body.appendChild(wrap);
+  }
+  async function runUpdate(btn, label, dismiss) {
+    btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = 'Updating…';
+    if (dismiss) dismiss.style.display = 'none';
+    label.textContent = 'Downloading update…';
+    try {
+      const r = await fetch('/api/update', { method: 'POST' });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || d.error) {
+        label.textContent = 'Update failed: ' + (d.error || ('HTTP ' + r.status));
+        btn.textContent = 'Retry'; btn.disabled = false; btn.style.opacity = '1';
+        if (dismiss) dismiss.style.display = ''; return;
+      }
+      if (!d.updated) { label.textContent = 'Already up to date.'; setTimeout(hideUpdateBanner, 2000); return; }
+      label.textContent = 'Restarting… this page refreshes automatically.';
+      let tries = 0;
+      const poll = setInterval(async () => {
+        tries++;
+        try { const h = await fetch('/api/health', { cache: 'no-store' }); if (h.ok) { clearInterval(poll); location.reload(true); } } catch (_) {}
+        if (tries > 45) { clearInterval(poll); label.textContent = 'Restart is taking a while — reload the page in a moment.'; }
+      }, 2000);
+    } catch (e) {
+      label.textContent = 'Update failed: ' + e.message;
+      btn.textContent = 'Retry'; btn.disabled = false; btn.style.opacity = '1';
+      if (dismiss) dismiss.style.display = '';
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initUpdateChecker);
+  else initUpdateChecker();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Tooling config only — dependency installs still go through requirements.txt.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+# The suite is fully isolated: tests/conftest.py forces DATA_DIR into a pytest
+# tmp dir before any app import and hard-refuses production paths.

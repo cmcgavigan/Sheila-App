@@ -1,0 +1,17 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# all runtime data: DB, photos, backups, exports, certs, logs
+data/
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# runtime artefacts
+current-url.txt
+install/nssm.exe
+*.log
